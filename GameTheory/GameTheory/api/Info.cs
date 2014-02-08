@@ -13,13 +13,13 @@ namespace Thjx
         internal int _G = 0; public int G { get { return _G; } }
         internal int _E = 0; public int E { get { return _E; } }
         internal int _M = 0; public int M { get { return _M; } }
-        internal int _T = 0; public int T { get { return _T; } }        
+        internal int _T = 0; public int T { get { return _T; } }
         internal int _N = 0; public int N { get { return _N; } }
         internal int _Score = 0; public int Score { get { return _Score; } }
 
         public int StrategyCount { get { return _W + _S + _G + _E + _M + _T + _N; } }
 
-        public int GetCount (Game.Startegy Strategy)
+        public int GetCount(Game.Startegy Strategy)
         {
             switch (Strategy)
             {
@@ -34,21 +34,28 @@ namespace Thjx
             return 0;
         }
 
-        internal int[][] _Matrix;
-        public int GetMatrixValue(int You, int Challenger)
+        internal Game.Startegy _LastActionPlayed = Game.Startegy.Nothing;
+        public Game.Startegy LastActionPlayed { get { return _LastActionPlayed; } }
+
+        public static Game.Startegy StrategyFromString(string Strategy)
         {
-            if (You < 0 || You > 6) { throw new IndexOutOfRangeException("Game matrix is a 7x7 matrix"); }
-            if (Challenger < 0 || Challenger > 6) { throw new IndexOutOfRangeException("Game matrix is a 7x7 matrix"); }
-            return _Matrix[You][Challenger];
-        }
-        public int GetMatrixValue(Game.Startegy You, Game.Startegy Challenger)
-        {
-            return GetMatrixValue((int)(You), (int)(Challenger)); 
+            Strategy = Strategy.ToLower();
+            while (Strategy.StartsWith(" ") || Strategy.StartsWith("\"") || Strategy.StartsWith("\'")) { Strategy = Strategy.Substring(1); }
+
+            if (Strategy == "") { return Game.Startegy.Nothing; }
+            if (Strategy[0] == 'e') { return Game.Startegy.E; }
+            if (Strategy[0] == 'g') { return Game.Startegy.G; }
+            if (Strategy[0] == 'm') { return Game.Startegy.M; }
+            if (Strategy[0] == 'n') { return Game.Startegy.N; }
+            if (Strategy[0] == 's') { return Game.Startegy.S; }
+            if (Strategy[0] == 't') { return Game.Startegy.T; }
+            if (Strategy[0] == 'w') { return Game.Startegy.W; }
+            return Game.Startegy.Nothing;
         }
 
         public override string ToString()
         {
-            return "{" + _Name + ": Score="+_Score + " [W:" + _W.ToString() + " S:" + _S.ToString() + " G:" + _G.ToString() + " E:" + _E.ToString() + " M:" + _M.ToString() + " N:" + _N.ToString() + " T:" + _T.ToString() + "]}";
+            return "{" + _Name + ": Score=" + _Score + " [W:" + _W.ToString() + " S:" + _S.ToString() + " G:" + _G.ToString() + " E:" + _E.ToString() + " M:" + _M.ToString() + " N:" + _N.ToString() + " T:" + _T.ToString() + "]}";
         }
     }
 }

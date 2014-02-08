@@ -100,13 +100,20 @@ namespace Thjx
 
         void _UpdateStock(Info Info, JSON.Object Stock)
         {
-            try { Info._W = (int)((Stock["W"] as JSON.Number).Value); } catch { }
-            try { Info._S = (int)((Stock["S"] as JSON.Number).Value); } catch { }
-            try { Info._G = (int)((Stock["G"] as JSON.Number).Value); } catch { }
-            try { Info._E = (int)((Stock["E"] as JSON.Number).Value); } catch { }
-            try { Info._M = (int)((Stock["M"] as JSON.Number).Value); } catch { }
-            try { Info._N = (int)((Stock["N"] as JSON.Number).Value); } catch { }
-            try { Info._T = (int)((Stock["T"] as JSON.Number).Value); } catch { }
+            try { Info._W = (int)((Stock["W"] as JSON.Number).Value); }
+            catch { }
+            try { Info._S = (int)((Stock["S"] as JSON.Number).Value); }
+            catch { }
+            try { Info._G = (int)((Stock["G"] as JSON.Number).Value); }
+            catch { }
+            try { Info._E = (int)((Stock["E"] as JSON.Number).Value); }
+            catch { }
+            try { Info._M = (int)((Stock["M"] as JSON.Number).Value); }
+            catch { }
+            try { Info._N = (int)((Stock["N"] as JSON.Number).Value); }
+            catch { }
+            try { Info._T = (int)((Stock["T"] as JSON.Number).Value); }
+            catch { }
         }
 
         /// <summary>
@@ -129,7 +136,7 @@ namespace Thjx
             JSON.Object action = new JSON.Object();
             action["type"] = "action";
             string act = "N";
-            switch(strategy)
+            switch (strategy)
             {
                 case Startegy.W: act = "W"; break;
                 case Startegy.S: act = "S"; break;
@@ -149,9 +156,12 @@ namespace Thjx
             {
                 JSON.Object you = result["you"] as JSON.Object;
                 _UpdateStock(_You, you["strategies"] as JSON.Object);
-                try { _You._Score = (int)(you["score"] as JSON.Number).Value; } catch {}   
+                try { _You._Score = (int)(you["score"] as JSON.Number).Value; }
+                catch { }
+                try { _You._LastActionPlayed = Info.StrategyFromString((you["action_played"] as JSON.String).ToString()); }
+                catch { }
             }
-            catch 
+            catch
             {
                 Console.WriteLine("[ERROR] Unexpected server response, data have not been updated");
             }
@@ -160,7 +170,10 @@ namespace Thjx
             {
                 JSON.Object challenger = result["challenger"] as JSON.Object;
                 _UpdateStock(_Challenger, challenger["strategies"] as JSON.Object);
-                try { _Challenger._Score = (int)(challenger["score"] as JSON.Number).Value; } catch { }   
+                try { _Challenger._Score = (int)(challenger["score"] as JSON.Number).Value; }
+                catch { }
+                try { _Challenger._LastActionPlayed = Info.StrategyFromString((challenger["action_played"] as JSON.String).ToString()); }
+                catch { }
             }
             catch
             {
@@ -205,7 +218,7 @@ namespace Thjx
 
             if (Request == null)
             {
-                
+
             }
             else
             {
@@ -262,7 +275,7 @@ namespace Thjx
         /// </summary>
         /// <param name="Value">True if a surrender proposition must be sended, false otherwise</param>
         /// <returns>True if the challeger has sended a surrender proposition, false otherwise</returns>
-        public bool SurrenderProposition(bool Value) 
+        public bool SurrenderProposition(bool Value)
         {
             if (_Step != Action.SurrenderProp)
             {
@@ -279,13 +292,13 @@ namespace Thjx
                 JSON.Object prop = _Parent._ReadObject();
                 return (prop["value"] as JSON.Boolean).State;
             }
-            catch 
+            catch
             {
                 Console.WriteLine("[ERROR] Unexpected server response, data have not been updated");
                 return false;
             }
 
-            
+
         }
 
         /// <summary>

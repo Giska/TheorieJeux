@@ -29,6 +29,7 @@ namespace Thjx
             byte[] bpassword = System.Security.Cryptography.SHA512.Create().ComputeHash(spassword);
             StringBuilder builder = new StringBuilder();
             for (int n = 0; n < bpassword.Length; n++) { builder.Append(bpassword[n].ToString("X2")); }
+            _Server = Server;
             _Password = builder.ToString().ToUpper();
             _Port = Port;
         }
@@ -66,7 +67,7 @@ namespace Thjx
                     while (_Client.Available >= 1)
                     {
                         int value = _Client.GetStream().ReadByte();
-                        if (value < 0) 
+                        if (value < 0)
                         {
                             Console.WriteLine("[ERROR] An error occurs while reading the server response (FATAL)");
                             System.Environment.Exit(1);
@@ -76,7 +77,7 @@ namespace Thjx
                         if (array.Count > 1024 * 1024)
                         {
                             Console.WriteLine("[ERROR] Response is too big (FATAL)");
-                            System.Environment.Exit(1); 
+                            System.Environment.Exit(1);
                         }
                         if (bvalue == '{')
                         {
@@ -171,22 +172,8 @@ namespace Thjx
                     catch { game.You._Name = "noname"; }
                     try { game.Challenger._Name = (newgame["challenger"] as JSON.String).Value; }
                     catch { game.Challenger._Name = "noname"; }
-                    try
-                    {
-                        game.You._Matrix = new int[][]
-                        {
-                            (int[])((newgame["matrix"] as JSON.Array).Values[0] as JSON.Array),
-                            (int[])((newgame["matrix"] as JSON.Array).Values[1] as JSON.Array),
-                            (int[])((newgame["matrix"] as JSON.Array).Values[2] as JSON.Array),
-                            (int[])((newgame["matrix"] as JSON.Array).Values[3] as JSON.Array),
-                            (int[])((newgame["matrix"] as JSON.Array).Values[4] as JSON.Array),
-                            (int[])((newgame["matrix"] as JSON.Array).Values[5] as JSON.Array),
-                            (int[])((newgame["matrix"] as JSON.Array).Values[6] as JSON.Array),
-                        };
-                    }
-                    catch { }
                     Loop(game);
-                    if (!game._Ended) 
+                    if (!game._Ended)
                     {
                         System.Console.WriteLine("[ERROR] Game loop has ended before the end of the game (FATAL)");
                         System.Environment.Exit(1);
@@ -194,13 +181,14 @@ namespace Thjx
                     JSON.Object ready = new JSON.Object();
                     ready["type"] = "ready";
                     _Write(ready);
+                    System.Threading.Thread.Sleep(10);
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine("[INFO]  An exception occurs inside the game loop:\n" + e.ToString());
             }
-            try 
+            try
             {
                 _Client.Close();
             }
