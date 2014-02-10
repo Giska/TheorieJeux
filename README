@@ -5,3 +5,9 @@ Theorie des Jeux
 README
 
 =============
+
+Langage C#
+
+Lancement:
+Ouvrir le GameTheory.sln et compiler
+Lancer GameTheory/bin/Debug/GameTheory.exe

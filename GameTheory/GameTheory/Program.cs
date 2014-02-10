@@ -22,8 +22,6 @@ namespace GameTheory
             System.Console.WriteLine("new game " + Game.You.Name + "<->" + Game.Challenger.Name);
 
             // Init the strategy put the 100 as we want
-            // TODO: initiate the strategy
-            //       => Put 100 il all the pure strat
             Thjx.Request InitialStock = new Thjx.Request();
             InitialStock.S = 10;
             InitialStock.G = 10;
@@ -36,7 +34,7 @@ namespace GameTheory
             //Start the game
             while (!Game.Ended)
             {
-                // Play strategy exemple using the strategy N
+                // Choose a Strategy
                 if (challenger_N < 2 && Game.You.N > 6)
                     Game.Act(Thjx.Game.Startegy.N);
                 else if (challenger_N > 2 && Game.You.T > 0)
@@ -48,30 +46,24 @@ namespace GameTheory
                 else
                     Game.Act(Thjx.Game.Startegy.T);
 
-                //Purchase
+                // Purchase
                 Thjx.Request PurchaseReq = new Thjx.Request();
                 if (Game.You.T < 3 && Game.You.Score > 12)
                 {
                     PurchaseReq.T = 1;
                 }
-                Console.WriteLine("Purchase");
                 Game.Purchase(PurchaseReq);
 
-                Console.WriteLine("Surrender");
-                Console.WriteLine("My Score: " + Game.You.Score);
-                Console.WriteLine("Your Choice: " + Game.You.LastActionPlayed);
-                Console.WriteLine("Challenger Score: " + Game.Challenger.Score);
-                Console.WriteLine("Challenger Choice: " + Game.Challenger.LastActionPlayed);
                 if (Game.Challenger.LastActionPlayed.ToString() == "N")
                     challenger_N++;
                 else
                     challenger_N = 0;
-                Console.WriteLine(challenger_N);
+                
+                // Surrender
                 if (Game.You.N < 5)
                 {
                     // This is not good we have no more N. We should surrender
                     bool Proposed = Game.SurrenderProposition(true);
-                    Console.WriteLine("Proposed surrender");
                     if (Proposed)
                         Game.SurrenderAcceptation(true); // The challenger has proposed to surrender we accept
                     else
@@ -79,14 +71,12 @@ namespace GameTheory
                 }
                 else
                 {
-                    Console.WriteLine("Refuse propose surrender");
                     // Don't care the situation is not problematic
                     // Just don't accept any surrender request
                     Game.SurrenderProposition(false);
                     Game.SurrenderAcceptation(false);
                 }
 
-                Console.WriteLine("New Turn");
             }
         }
     }
